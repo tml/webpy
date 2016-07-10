@@ -1164,7 +1164,7 @@ def tryall(context, prefix=None):
         
     print('-'*40)
     print('results:')
-    for (key, value) in results.iteritems():
+    for (key, value) in iteritems(results):
         print(' '*2, str(key)+':', value)
         
 class ThreadedDict(threadlocal):
