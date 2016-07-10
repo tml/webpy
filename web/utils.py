@@ -115,11 +115,11 @@ def storify(mapping, *requireds, **defaults):
     Optionally, keyword parameter `_unicode` can be passed to convert all values to unicode.
     
         >>> storify({'x': 'a'}, _unicode=True)
-        <Storage {'x': u'a'}>
+        <Storage {'x': 'a'}>
         >>> storify({'x': storage(value='a')}, x={}, _unicode=True)
         <Storage {'x': <Storage {'value': 'a'}>}>
         >>> storify({'x': storage(value='a')}, _unicode=True)
-        <Storage {'x': u'a'}>
+        <Storage {'x': 'a'}>
     """
     _unicode = defaults.pop('_unicode', False)
 
@@ -314,11 +314,11 @@ def safeunicode(obj, encoding='utf-8'):
     Converts any given object to unicode string.
     
         >>> safeunicode('hello')
-        u'hello'
+        'hello'
         >>> safeunicode(2)
-        u'2'
-        >>> safeunicode('\xe1\x88\xb4')
-        u'\u1234'
+        '2'
+        >>> safeunicode(b'\xe1\x88\xb4')
+        'ሴ'
     """
     t = type(obj)
     if t is text_type:
@@ -326,13 +326,13 @@ def safeunicode(obj, encoding='utf-8'):
     elif t is bytes:
         return obj.decode(encoding)
     elif t in [int, float, bool]:
-        return unicode(obj)
+        return str(obj)
     #elif hasattr(obj, '__unicode__') or isinstance(obj, unicode):
     #    return unicode(obj)
     #else:
     #    return str(obj).decode(encoding)
     else:
-        return unicode(obj)
+        return str(obj)
 
 if PY2:
     def is_iter(obj):
@@ -346,9 +346,9 @@ def safestr(obj, encoding='utf-8'):
     Converts any given object to utf-8 encoded string. 
     
         >>> safestr('hello')
-        'hello'
+        b'hello'
         >>> safestr(u'\u1234')
-        '\xe1\x88\xb4'
+        b'\xe1\x88\xb4'
         >>> safestr(2)
         '2'
     """
