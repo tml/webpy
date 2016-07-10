@@ -20,7 +20,7 @@ class DBTest(webtest.TestCase):
             webtest.setup_database(self.dbname, driver=self.driver)
             return True
         except ImportError as e:
-            print >> web.debug, str(e), "(ignoring %s)" % self.__class__.__name__
+            print("{} (ignoring {})".format(str(e), self.__class__.__name__), file=web.debug)
             return False
     
     def testUnicode(self):
