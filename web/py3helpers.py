@@ -4,11 +4,12 @@ import sys
 
 PY2 = sys.version_info[0] == 2
 
-# urljoin
+# urllib renames
 if PY2:
     from urlparse import urljoin
+    from urllib import splitquery, urlencode, unquote
 else:
-    from urllib.parse import urljoin
+    from urllib.parse import urljoin, splitquery, urlencode, unquote
 
 # Dictionary iteration
 if PY2:
