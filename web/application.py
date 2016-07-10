@@ -9,7 +9,7 @@ from . import webapi, wsgi, utils
 from . import debugerror
 from . import httpserver
 from .utils import lstrips, safeunicode
-from .py3helpers import iteritems, string_types
+from .py3helpers import iteritems, string_types, splitquery, urlencode, unquote
 import sys
 
 import urllib
@@ -183,7 +183,7 @@ class application:
             'your user-agent is a small jumping bean/1.0 (compatible)'
 
         """
-        path, maybe_query = urllib.splitquery(localpart)
+        path, maybe_query = splitquery(localpart)
         query = maybe_query or ""
         
         if 'env' in kw:
@@ -206,7 +206,7 @@ class application:
             data = data or ''
             import StringIO
             if isinstance(data, dict):
-                q = urllib.urlencode(data)
+                q = urlencode(data)
             else:
                 q = data
             env['wsgi.input'] = StringIO.StringIO(q)
@@ -406,7 +406,7 @@ class application:
             ctx.path = lstrips(env.get('REQUEST_URI').split('?')[0], ctx.homepath)
             # Apache and CherryPy webservers unquote the url but lighttpd doesn't. 
             # unquote explicitly for lighttpd to make ctx.path uniform across all servers.
-            ctx.path = urllib.unquote(ctx.path)
+            ctx.path = unquote(ctx.path)
 
         if env.get('QUERY_STRING'):
             ctx.query = '?' + env.get('QUERY_STRING', '')
