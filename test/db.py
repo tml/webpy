@@ -169,7 +169,7 @@ def is_test(cls):
     return inspect.isclass(cls) and webtest.TestCase in inspect.getmro(cls)
 
 # ignore db tests when the required db adapter is not found.
-for t in globals().values():
+for t in list(globals().values()):
     if is_test(t) and not t('_testable')._testable():
         del globals()[t.__name__]
 del t
