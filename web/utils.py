@@ -671,7 +671,7 @@ class IterBetter:
         except StopIteration: 
             raise IndexError(str(i))
             
-    def __nonzero__(self):
+    def __bool__(self):
         if hasattr(self, "__len__"):
             return len(self) != 0
         elif hasattr(self, "_head"):
