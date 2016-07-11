@@ -433,7 +433,7 @@ def parse_cookies(http_cookie):
                     cookie.load(attr_value)
                 except Cookie.CookieError:
                     pass
-        cookies = dict([(k, urllib.unquote(v.value)) for k, v in cookie.iteritems()])
+        cookies = dict([(k, urlunquote(v.value)) for k, v in cookie.iteritems()])
     else:
         # HTTP_COOKIE doesn't have quotes, use fast cookie parsing
         cookies = {}
@@ -441,7 +441,7 @@ def parse_cookies(http_cookie):
             key_value = key_value.split('=', 1)
             if len(key_value) == 2:
                 key, value = key_value
-                cookies[key.strip()] = urllib.unquote(value.strip())
+                cookies[key.strip()] = urlunquote(value.strip())
     return cookies
 
 def cookies(*requireds, **defaults):
