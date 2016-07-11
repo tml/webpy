@@ -143,11 +143,12 @@ class Session(object):
     def _generate_session_id(self):
         """Generate a random id for session"""
 
+        import binascii
         while True:
-            rand = os.urandom(16)
+            rand = binascii.hexlify(os.urandom(16)).decode('utf-8')
             now = time.time()
             secret_key = self._config.secret_key
-            session_id = sha1("%s%s%s%s" %(rand, now, utils.safestr(web.ctx.ip), secret_key))
+            session_id = sha1("{}{}{}{}".format(rand, now, utils.safestr(web.ctx.ip).encode('utf-8'), secret_key).encode('utf-8'))
             session_id = session_id.hexdigest()
             if session_id not in self.store:
                 break
@@ -248,7 +249,7 @@ class DiskStore(Store):
         path = self._get_path(key)
         pickled = self.encode(value)    
         try:
-            f = open(path, 'w')
+            f = open(path, 'wb')
             try:
                 f.write(pickled)
             finally: 
