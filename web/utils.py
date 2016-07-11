@@ -76,7 +76,13 @@ class Storage(dict):
             raise AttributeError(k)
     
     def __repr__(self):     
-        return '<Storage ' + dict.__repr__(self) + '>'
+        items = []
+        for prop in sorted(dict(self)):
+            if type(self[prop]) == type(""):
+                items.append("'{}': '{}',".format(prop, self[prop]))
+            else:
+                items.append("'{}': {},".format(prop, self[prop]))
+        return '<Storage {{{}}}>'.format(' '.join(filter(None, items)).rstrip(','))
 
 storage = Storage
 
@@ -175,7 +181,7 @@ class Counter(storage):
         >>> c.add('x')
         >>> c.add('y')
         >>> c
-        <Counter {'y': 1, 'x': 5}>
+        <Counter {'x': 5, 'y': 1}>
         >>> c.most()
         ['x']
     """
@@ -245,7 +251,13 @@ class Counter(storage):
         return [(k, self[k]) for k in self.sorted_keys()]
     
     def __repr__(self):
-        return '<Counter ' + dict.__repr__(self) + '>'
+        items = []
+        for prop in sorted(dict(self)):
+            if type(self[prop]) == type(""):
+                items.append("'{}': '{}',".format(prop, self[prop]))
+            else:
+                items.append("'{}': {},".format(prop, self[prop]))
+        return '<Counter {{{}}}>'.format(' '.join(filter(None, items)).rstrip(','))
        
 counter = Counter
 
