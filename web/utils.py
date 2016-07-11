@@ -38,7 +38,7 @@ import subprocess
 import datetime
 from threading import local as threadlocal
 
-from .py3helpers import PY2, itervalues, iteritems, text_type, string_types, imap
+from .py3helpers import PY2, itervalues, iteritems, text_type, string_types, imap, iternext
 
 class Storage(dict):
     """
@@ -654,7 +654,7 @@ class IterBetter:
             yield self._head
 
         while 1:    
-            yield self.i.next()
+            yield iternext(self.i)
             self.c += 1
 
     def __getitem__(self, i):
@@ -663,11 +663,11 @@ class IterBetter:
             raise IndexError("already passed "+str(i))
         try:
             while i > self.c: 
-                self.i.next()
+                iternext(self.i)
                 self.c += 1
             # now self.c == i
             self.c += 1
-            return self.i.next()
+            return iternext(self.i)
         except StopIteration: 
             raise IndexError(str(i))
             
@@ -678,7 +678,7 @@ class IterBetter:
             return True
         else:
             try:
-                self._head = self.i.next()
+                self._head = iternext(self.i)
             except StopIteration:
                 return False
             else:
@@ -692,7 +692,7 @@ def safeiter(it, cleanup=None, ignore_errors=True):
     def next():
         while True:
             try:
-                return it.next()
+                return iternext(it)
             except StopIteration:
                 raise
             except:

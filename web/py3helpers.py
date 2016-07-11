@@ -21,6 +21,13 @@ else:
     itervalues = lambda d: iter(d.values())
     iteritems = lambda d: iter(d.items())
 
+# Iter iteration
+def iternext(iter):
+    if PY2:
+        return iter.next()
+    else:
+        return iter.__next__()
+
 # string and text types
 if PY2:
     text_type = unicode
