@@ -97,7 +97,7 @@ class DBTest(webtest.TestCase):
         db = webtest.setup_database(self.dbname)
         self.db.insert('person', False, name='user')
         name = db.select('person')[0].name
-        self.assertEquals(type(name), unicode)
+        self.assertEqual(type(name), str)
 
     def test_result_is_true(self):
         db = webtest.setup_database(self.dbname)

@@ -339,7 +339,7 @@ def sqllist(lst):
         >>> sqllist(u'abc')
         u'abc'
     """
-    if isinstance(lst, basestring): 
+    if isinstance(lst, str):
         return lst
     else:
         return ', '.join(lst)
