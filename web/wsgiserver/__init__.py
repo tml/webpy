@@ -70,21 +70,18 @@ number of requests and their responses, so we run a nested loop::
 
 CRLF = '\r\n'
 import os
-import Queue
+import queue
 import re
 quoted_slash = re.compile("(?i)%2F")
-import rfc822
+import email
 import socket
 import sys
 if 'win' in sys.platform and not hasattr(socket, 'IPPROTO_IPV6'):
     socket.IPPROTO_IPV6 = 41
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
+from io import StringIO
 DEFAULT_BUFFER_SIZE = -1
 
-_fileobject_uses_str_type = isinstance(socket._fileobject(None)._rbuf, basestring)
+_fileobject_uses_str_type = isinstance(socket._fileobject(None)._rbuf, str)
 
 import threading
 import time
