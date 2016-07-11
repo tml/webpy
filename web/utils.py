@@ -846,7 +846,7 @@ def datestr(then, now=None):
         >>> d = datetime(1970, 5, 1)
         >>> datestr(d, now=d)
         '0 microseconds ago'
-        >>> for t, v in {
+        >>> for t, v in iteritems({
         ...   timedelta(microseconds=1): '1 microsecond ago',
         ...   timedelta(microseconds=2): '2 microseconds ago',
         ...   -timedelta(microseconds=1): '1 microsecond from now',
@@ -856,7 +856,7 @@ def datestr(then, now=None):
         ...   timedelta(seconds=2*60): '2 minutes ago',
         ...   timedelta(seconds=2*60*60): '2 hours ago',
         ...   timedelta(days=2): '2 days ago',
-        ... }.iteritems():
+        ... }):
         ...     assert datestr(d, now=d+t) == v
         >>> datestr(datetime(1970, 1, 1), now=d)
         'January  1'
