@@ -378,7 +378,7 @@ def timelimit(timeout):
         >>> timelimit(.1)(meaningoflife)()
         Traceback (most recent call last):
             ...
-        TimeoutError: took too long
+        web.utils.TimeoutError: took too long
         >>> timelimit(1)(meaningoflife)()
         42
 
