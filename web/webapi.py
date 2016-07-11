@@ -355,8 +355,10 @@ def setcookie(name, value, expires='', domain=None,
     """Sets a cookie."""
     morsel = Morsel()
     name, value = safestr(name), safestr(value)
-    morsel.set(name, value, urllib.quote(value))
-    if expires < 0:
+    morsel.set(name, value, urlquote(value))
+    if not expires.strip():
+        expires = '0'
+    if int(expires) < 0:
         expires = -1000000000
     morsel['expires'] = expires
     morsel['path'] = path or ctx.homepath+'/'
