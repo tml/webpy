@@ -513,7 +513,7 @@ class application:
         if parent:
             return parent.internalerror()
         elif web.config.get('debug'):
-            import debugerror
+            from . import debugerror
             return debugerror.debugerror()
         else:
             return web._InternalError()
