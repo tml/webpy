@@ -1053,7 +1053,7 @@ class CaptureStdout:
     def __init__(self, func): 
         self.func = func
     def __call__(self, *args, **keywords):
-        from cStringIO import StringIO
+        import io as StringIO
         # Not threadsafe!
         out = StringIO()
         oldstdout = sys.stdout
