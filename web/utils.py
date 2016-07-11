@@ -38,7 +38,7 @@ import subprocess
 import datetime
 from threading import local as threadlocal
 
-from .py3helpers import PY2, itervalues, iteritems, text_type, string_types, imap, iternext
+from .py3helpers import PY2, itervalues, iteritems, iternext, text_type, string_types, imap
 
 class Storage(dict):
     """
