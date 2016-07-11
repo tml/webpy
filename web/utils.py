@@ -684,17 +684,18 @@ class IterBetter:
             raise IndexError(str(i))
             
     def __bool__(self):
-        if hasattr(self, "__len__"):
+        try:
             return len(self) != 0
-        elif hasattr(self, "_head"):
-            return True
-        else:
-            try:
-                self._head = iternext(self.i)
-            except StopIteration:
-                return False
-            else:
+        except TypeError as e:
+            if hasattr(self, "_head"):
                 return True
+            else:
+                try:
+                    self._head = iternext(self.i)
+                except StopIteration:
+                    return False
+                else:
+                    return True
 
 iterbetter = IterBetter
 
