@@ -98,8 +98,8 @@ def format_exc(limit=None):
         etype = value = tb = None
 
 
-from urllib import unquote
-from urlparse import urlparse
+from urllib.parse import unquote
+from urllib.parse import urlparse
 import warnings
 
 import errno
@@ -114,7 +114,7 @@ def plat_specific_errors(*errnames):
     errno_names = dir(errno)
     nums = [getattr(errno, k) for k in errnames if k in errno_names]
     # de-dupe the list
-    return dict.fromkeys(nums).keys()
+    return list(dict.fromkeys(nums).keys())
 
 socket_error_eintr = plat_specific_errors("EINTR", "WSAEINTR")
 
@@ -255,8 +255,8 @@ class SizeCheckWrapper(object):
     def __iter__(self):
         return self
     
-    def next(self):
-        data = self.rfile.next()
+    def __next__(self):
+        data = next(self.rfile)
         self.bytes_read += len(data)
         self._check_length()
         return data
@@ -803,7 +803,7 @@ class HTTPRequest(object):
         
         buf.append(CRLF)
         if msg:
-            if isinstance(msg, unicode):
+            if isinstance(msg, str):
                 msg = msg.encode("ISO-8859-1")
             buf.append(msg)
         
@@ -1382,7 +1382,7 @@ class WorkerThread(threading.Thread):
                         self.work_time += time.time() - self.start_time
                         self.start_time = None
                     self.conn = None
-        except (KeyboardInterrupt, SystemExit), exc:
+        except (KeyboardInterrupt, SystemExit) as exc:
             self.server.interrupt = exc
 
 
@@ -1483,7 +1483,7 @@ class ThreadPool(object):
                 except (AssertionError,
                         # Ignore repeated Ctrl-C.
                         # See http://www.cherrypy.org/ticket/691.
-                        KeyboardInterrupt), exc1:
+                        KeyboardInterrupt) as exc1:
                     pass
     
     def _get_qsize(self):
@@ -1718,7 +1718,7 @@ class HTTPServer(object):
             except: pass
             
             # So everyone can access the socket...
-            try: os.chmod(self.bind_addr, 0777)
+            try: os.chmod(self.bind_addr, o0777)
             except: pass
             
             info = [(socket.AF_UNIX, socket.SOCK_STREAM, 0, "", self.bind_addr)]
@@ -2046,7 +2046,7 @@ class WSGIGateway(Gateway):
         # exc_info tuple."
         if self.req.sent_headers:
             try:
-                raise exc_info[0], exc_info[1], exc_info[2]
+                raise exc_info[0](exc_info[1]).with_traceback(exc_info[2])
             finally:
                 exc_info = None
         

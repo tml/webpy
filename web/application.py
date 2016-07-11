@@ -8,6 +8,7 @@ from . import webapi as web
 from . import webapi, wsgi, utils
 from . import debugerror
 from . import httpserver
+from imp import reload
 from .utils import lstrips, safeunicode
 from .py3helpers import iteritems, string_types, splitquery, urlencode, unquote
 import sys
@@ -204,7 +205,7 @@ class application:
 
         if method not in ["HEAD", "GET"]:
             data = data or ''
-            import StringIO
+            import io as StringIO
             if isinstance(data, dict):
                 q = urlencode(data)
             else:
@@ -221,7 +222,7 @@ class application:
         return response
 
     def browser(self):
-        import browser
+        from . import browser
         return browser.AppBrowser(self)
 
     def handle(self):

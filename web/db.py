@@ -7,6 +7,7 @@ from __future__ import print_function
 import time, os, urllib
 import datetime
 from .utils import threadeddict, storage, iters, iterbetter, safestr, safeunicode
+from .py3helpers import iteritems
 
 try:
     # db module can work independent of web.py
@@ -135,7 +136,7 @@ class SQLQuery(object):
         self.items.append(value)
 
     def __add__(self, other):
-        if isinstance(other, basestring):
+        if isinstance(other, str):
             items = [other]
         elif isinstance(other, SQLQuery):
             items = other.items
@@ -144,7 +145,7 @@ class SQLQuery(object):
         return SQLQuery(self.items + items)
 
     def __radd__(self, other):
-        if isinstance(other, basestring):
+        if isinstance(other, str):
             items = [other]
         else:
             return NotImplemented
@@ -152,7 +153,7 @@ class SQLQuery(object):
         return SQLQuery(items + self.items)
 
     def __iadd__(self, other):
-        if isinstance(other, (basestring, SQLParam)):
+        if isinstance(other, (str, SQLParam)):
             self.items.append(other)
         elif isinstance(other, SQLQuery):
             self.items.extend(other.items)
@@ -319,12 +320,12 @@ def sqlify(obj):
         return "'t'"
     elif obj is False:
         return "'f'"
-    elif isinstance(obj, long):
+    elif isinstance(obj, int):
         return str(obj)
     elif isinstance(obj, datetime.datetime):
         return repr(obj.isoformat())
     else:
-        if isinstance(obj, unicode): obj = obj.encode('utf8')
+        if isinstance(obj, str): obj = obj.encode('utf8')
         return repr(obj)
 
 def sqllist(lst): 
@@ -603,7 +604,7 @@ class DB:
         return query, params
     
     def _where(self, where, vars): 
-        if isinstance(where, (int, long)):
+        if isinstance(where, int):
             where = "id = " + sqlparam(where)
         #@@@ for backward-compatibility
         elif isinstance(where, (list, tuple)) and len(where) == 2:
@@ -690,7 +691,7 @@ class DB:
             <sql: 'SELECT * FROM foo'>
         """
         where_clauses = []
-        for k, v in kwargs.iteritems():
+        for k, v in iteritems(kwargs):
             where_clauses.append(k + ' = ' + sqlquote(v))
             
         if where_clauses:
@@ -713,7 +714,7 @@ class DB:
             ('OFFSET', offset))
     
     def gen_clause(self, sql, val, vars): 
-        if isinstance(val, (int, long)):
+        if isinstance(val, int):
             if sql == 'WHERE':
                 nout = 'id = ' + sqlquote(val)
             else:
@@ -1200,7 +1201,9 @@ def _interpolate(format):
 
     from <http://lfw.org/python/Itpl.py> (public domain, Ka-Ping Yee)
     """
-    from tokenize import tokenprog
+    import tokenize
+    import re
+    tokenprog = re.compile(tokenize.Ignore+tokenize.PlainToken)
 
     def matchorfail(text, pos):
         match = tokenprog.match(text, pos)

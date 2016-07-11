@@ -32,7 +32,7 @@ __all__ = [
 import sys, cgi, pprint, urllib
 from .utils import storage, storify, threadeddict, dictadd, intget, safestr
 
-from .py3helpers import PY2, urljoin
+from .py3helpers import PY2, urljoin, urlquote
 
 if PY2:
     from Cookie import Morsel
@@ -288,7 +288,7 @@ def rawinput(method=None):
     """Returns storage object with GET or POST arguments.
     """
     method = method or "both"
-    from cStringIO import StringIO
+    from io import BytesIO
 
     def dictify(fs): 
         # hack to make web.input work with enctype='text/plain.
@@ -312,7 +312,7 @@ def rawinput(method=None):
                     a = cgi.FieldStorage(fp=fp, environ=e, keep_blank_values=1)
                     ctx._fieldstorage = a
             else:
-                fp = StringIO(data())
+                fp = BytesIO(data().encode('utf-8'))
                 a = cgi.FieldStorage(fp=fp, environ=e, keep_blank_values=1)
             a = dictify(a)
 

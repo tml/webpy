@@ -3,7 +3,7 @@ import time
 import threading
 
 import web
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 data = """
 import web

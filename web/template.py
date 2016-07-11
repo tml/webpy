@@ -41,11 +41,12 @@ import sys
 import glob
 import re
 import warnings
+import io
 
 from .utils import storage, safeunicode, safestr, re_compile
 from .webapi import config
 from .net import websafe
-from .py3helpers import PY2
+from .py3helpers import PY2, iternext
 
 if PY2:
     from UserDict import DictMixin
@@ -317,9 +318,9 @@ class Parser:
             This function introduces dummy space tokens when it identifies any ignored space.
             Each token is a storage object containing type, value, begin and end.
             """
-            readline = iter([text]).next
+            readline = io.BytesIO(text.encode('utf-8')).readline
             end = None
-            for t in tokenize.generate_tokens(readline):
+            for t in tokenize.tokenize(readline):
                 t = storage(type=t[0], value=t[1], begin=t[2], end=t[3])
                 if end is not None and end != t.begin:
                     _, x1 = end
@@ -343,7 +344,7 @@ class Parser:
 
             def _next(self):
                 try:
-                    return self.iteritems.next()
+                    return next(self.iteritems)
                 except StopIteration:
                     return None
                 
@@ -886,7 +887,7 @@ class Template(BaseTemplate):
                 
     def __call__(self, *a, **kw):
         __hidetraceback__ = True
-        import webapi as web
+        from . import webapi as web
         if 'headers' in web.ctx and self.content_type:
             web.header('Content-Type', self.content_type, unique=True)
             

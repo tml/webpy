@@ -10,7 +10,7 @@ __all__ = [
   "htmlquote", "htmlunquote", "websafe",
 ]
 
-import urllib, time
+import urllib.request, urllib.parse, urllib.error, time
 import datetime
 import re
 import socket
@@ -158,13 +158,13 @@ def urlquote(val):
         '%3A//%3Ff%3D1%26j%3D1'
         >>> urlquote(None)
         ''
-        >>> urlquote(u'\u203d')
+        >>> urlquote(u'\\u203d')
         '%E2%80%BD'
     """
     if val is None: return ''
-    if not isinstance(val, unicode): val = str(val)
+    if not isinstance(val, str): val = str(val)
     else: val = val.encode('utf-8')
-    return urllib.quote(val)
+    return urllib.parse.quote(val)
 
 def httpdate(date_obj):
     """
@@ -196,11 +196,11 @@ def htmlquote(text):
         >>> htmlquote(u"<'&\">")
         u'&lt;&#39;&amp;&quot;&gt;'
     """
-    text = text.replace(u"&", u"&amp;") # Must be done first!
-    text = text.replace(u"<", u"&lt;")
-    text = text.replace(u">", u"&gt;")
-    text = text.replace(u"'", u"&#39;")
-    text = text.replace(u'"', u"&quot;")
+    text = text.replace("&", "&amp;") # Must be done first!
+    text = text.replace("<", "&lt;")
+    text = text.replace(">", "&gt;")
+    text = text.replace("'", "&#39;")
+    text = text.replace('"', "&quot;")
     return text
 
 def htmlunquote(text):
@@ -210,11 +210,11 @@ def htmlunquote(text):
         >>> htmlunquote(u'&lt;&#39;&amp;&quot;&gt;')
         u'<\'&">'
     """
-    text = text.replace(u"&quot;", u'"')
-    text = text.replace(u"&#39;", u"'")
-    text = text.replace(u"&gt;", u">")
-    text = text.replace(u"&lt;", u"<")
-    text = text.replace(u"&amp;", u"&") # Must be done last!
+    text = text.replace("&quot;", '"')
+    text = text.replace("&#39;", "'")
+    text = text.replace("&gt;", ">")
+    text = text.replace("&lt;", "<")
+    text = text.replace("&amp;", "&") # Must be done last!
     return text
     
 def websafe(val):
@@ -230,11 +230,11 @@ def websafe(val):
         u'\u203d'
     """
     if val is None:
-        return u''
+        return ''
     elif isinstance(val, str):
         val = val.decode('utf-8')
-    elif not isinstance(val, unicode):
-        val = unicode(val)
+    elif not isinstance(val, str):
+        val = str(val)
         
     return htmlquote(val)
 

@@ -31,7 +31,7 @@ def runbasic(func, server_address=("0.0.0.0", 8080)):
     # Used under the modified BSD license:
     # http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5
 
-    import SimpleHTTPServer, SocketServer, BaseHTTPServer, urlparse
+    import http.server, socketserver, http.server, urllib.parse
     import socket, errno
     import traceback
 
@@ -60,7 +60,7 @@ def runbasic(func, server_address=("0.0.0.0", 8080)):
                    ,'SERVER_PROTOCOL': self.request_version
                    }
 
-            for http_header, http_value in self.headers.items():
+            for http_header, http_value in list(self.headers.items()):
                 env ['HTTP_%s' % http_header.replace('-', '_').upper()] = \
                     http_value
 
@@ -170,7 +170,7 @@ def WSGIServer(server_address, wsgi_app):
     """Creates CherryPy WSGI server listening at `server_address` to serve `wsgi_app`.
     This function can be overwritten to customize the webserver or use a different webserver.
     """
-    import wsgiserver
+    from . import wsgiserver
     
     # Default values of wsgiserver.ssl_adapters uses cherrypy.wsgiserver
     # prefix. Overwriting it make it work with web.wsgiserver.
@@ -293,9 +293,9 @@ class LogMiddleware:
         self.app = app
         self.format = '%s - - [%s] "%s %s %s" - %s'
     
-        from BaseHTTPServer import BaseHTTPRequestHandler
-        import StringIO
-        f = StringIO.StringIO()
+        from http.server import BaseHTTPRequestHandler
+        import io
+        f = io.StringIO()
         
         class FakeSocket:
             def makefile(self, *a):
