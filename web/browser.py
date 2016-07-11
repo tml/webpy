@@ -47,7 +47,7 @@ class Browser:
 
     def do_request(self, req):
         if DEBUG:
-            print 'requesting', req.get_method(), req.get_full_url()
+            print('requesting {} {}'.format(req.get_method(), req.get_full_url()))
         opener = self.build_opener()
         opener.add_handler(self._cookie_processor)
         try:
