@@ -224,8 +224,8 @@ class ApplicationTest(webtest.TestCase):
             path = '/?' + urllib.parse.urlencode({"name": name.encode('utf-8')})
             self.assertEqual(app.request(path).data, repr(name))
             
-        f(u'\u1234')
-        f(u'foo')
+        f('\u1234')
+        f('foo')
 
         response = app.request('/', method='POST', data=dict(name='foo'))
         self.assertEqual(response.data, "{'name': u'foo'}")
