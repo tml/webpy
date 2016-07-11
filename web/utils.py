@@ -358,18 +358,18 @@ def safestr(obj, encoding='utf-8'):
     Converts any given object to utf-8 encoded string. 
     
         >>> safestr('hello')
-        b'hello'
+        'hello'
         >>> safestr(u'\u1234')
-        b'\xe1\x88\xb4'
+        'ሴ'
         >>> safestr(2)
         '2'
     """
     if isinstance(obj, text_type):
-        return obj.encode(encoding)
-    elif isinstance(obj, bytes):
         return obj
+    elif isinstance(obj, bytes):
+        return obj.decode(encoding)
     elif is_iter(obj):
-        return imap(safestr, obj)
+        return next(imap(safestr, obj))
     else:
         return str(obj)
 
