@@ -221,8 +221,8 @@ class ApplicationTest(webtest.TestCase):
         app = web.application(urls, locals())
         
         def f(name):
-            path = '/?' + urllib.urlencode({"name": name.encode('utf-8')})
-            self.assertEquals(app.request(path).data, repr(name))
+            path = '/?' + urllib.parse.urlencode({"name": name.encode('utf-8')})
+            self.assertEqual(app.request(path).data, repr(name))
             
         f(u'\u1234')
         f(u'foo')
